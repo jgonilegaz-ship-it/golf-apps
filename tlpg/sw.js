@@ -1,6 +1,6 @@
 // Lo mínimo para que el móvil la trate como app instalable. Guarda solo esta página y sus iconos;
 // la app de verdad (Google Apps Script) siempre se carga de la red.
-var CACHE = 'tlpg-v2';
+var CACHE = 'tlpg-v3';
 var BASE = ['./', 'index.html', 'config.js', 'manifest.webmanifest', 'icono-192.png', 'icono-512.png', 'apple-touch-icon.png', 'favicon-32.png', 'icono-512-mask.png', 'logo.png'];
 
 self.addEventListener('install', function (e) {
