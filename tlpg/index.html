@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Locos Golf</title>
+<meta name="theme-color" content="#1f3b5c">
+<meta name="description" content="Apuntarse, salidas, juego y clasificación de los Locos Golf (TLPG)">
+<meta property="og:title" content="Locos Golf · Zuasti">
+<meta property="og:description" content="Apuntarse, salidas, juego y clasificación">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jgonilegaz-ship-it.github.io/golf-apps/tlpg/">
+<meta property="og:image" content="https://jgonilegaz-ship-it.github.io/golf-apps/tlpg/enlace.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Locos Golf">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script src="config.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; background: #1f3b5c; overflow: hidden; }
+  #app { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; background: #fff;
+         padding-top: env(safe-area-inset-top); box-sizing: border-box; }
+  #portada { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+             gap: 18px; background: #fff; color: #1f3b5c; font: 600 17px system-ui, -apple-system, Roboto, sans-serif;
+             transition: opacity .4s; z-index: 2; }
+  #portada img { width: 260px; max-width: 80vw; height: auto; }
+  #portada.fuera { opacity: 0; pointer-events: none; }
+  #ayuda { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 3;
+           background: rgba(31,59,92,.95); color: #fff; border-radius: 12px; padding: 10px 14px;
+           font: 14px system-ui, -apple-system, Roboto, sans-serif; display: none; align-items: center; gap: 10px; }
+  #ayuda a { color: #f0c75e; font-weight: 700; white-space: nowrap; }
+  #ayuda button { margin-left: auto; background: none; border: 0; color: #fff; font-size: 20px; line-height: 1; }
+</style>
+</head>
+<body>
+<div id="portada"><img src="logo.png" alt="Locos Golf"><div>Cargando…</div></div>
+<iframe id="app" title="Locos Golf" allow="geolocation *; clipboard-write *"></iframe>
+<div id="ayuda"><span>¿No carga?</span><a id="abrirFuera" href="#" target="_blank" rel="noopener">Ábrela en Google</a><button aria-label="Cerrar" onclick="this.parentNode.style.display='none'">×</button></div>
+<script>
+  // la app de Apps Script va dentro; esta página solo pone el nombre, el icono y la instalación
+  var f = document.getElementById('app');
+  f.src = APP.url;
+  document.getElementById('abrirFuera').href = APP.url;
+  var cargada = false;
+  f.addEventListener('load', function () { cargada = true; document.getElementById('portada').className = 'fuera'; });
+  // si a los 12 s no ha cargado, se ofrece abrirla fuera (en Google)
+  setTimeout(function () { if (!cargada) document.getElementById('ayuda').style.display = 'flex'; }, 12000);
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+</script>
+</body>
+</html>
