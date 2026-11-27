@@ -1,7 +1,7 @@
 // Lo mínimo para que el móvil la trate como app instalable. Guarda solo esta página y sus iconos;
 // la app de verdad (Google Apps Script) siempre se carga de la red.
-var CACHE = 'pool-v1';
-var BASE = ['./', 'index.html', 'config.js', 'manifest.webmanifest', 'icono-192.png', 'icono-512.png', 'apple-touch-icon.png', 'favicon-32.png'];
+var CACHE = 'pool-v2';
+var BASE = ['./', 'index.html', 'config.js', 'manifest.webmanifest', 'icono-192.png', 'icono-512.png', 'apple-touch-icon.png', 'favicon-32.png', 'instalar.js'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(BASE); }).then(function () { return self.skipWaiting(); }));
