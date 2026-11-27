@@ -1,6 +1,6 @@
 // Botón «Instalar la app» y avisos para instalarla sin buscar menús.
 // - Android (Chrome, Internet de Samsung): botón que abre la ventana de instalación del propio móvil.
-// - iPhone (Safari): Apple no deja instalar con un botón; cartel con los 2 pasos.
+// - iPhone: Apple no deja instalar con un botón; cartel con botón «Copiar enlace» (para pegarlo en Safari) y los pasos.
 // - Abierta dentro de WhatsApp u otra app: aviso para abrirla en el navegador.
 // - Ya instalada (abierta desde el icono): no sale nada.
 // Para probar en el ordenador: ?ver=android | ?ver=ios | ?ver=whatsapp
@@ -40,17 +40,46 @@
   var compartir = '<svg width="20" height="22" viewBox="0 0 20 22" fill="none" stroke="#007aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
     '<path d="M10 14V2M6 6l4-4 4 4"/><path d="M6 9H3v11h14V9h-3"/></svg>';
 
+  // botón que copia el enlace de esta página (para pegarlo en Safari)
+  var enlace = location.origin + location.pathname;
+  function botonCopiar() {
+    var b = caja.querySelector('.copiar');
+    if (!b) return;
+    b.onclick = function () {
+      function hecho() { b.textContent = '✅ Copiado. Ahora abre Safari y pégalo arriba'; b.style.background = '#1f3b5c'; }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(enlace).then(hecho, viejo); else viejo();
+      function viejo() {
+        var t = document.createElement('textarea'); t.value = enlace; t.setAttribute('readonly', '');
+        t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t);
+        t.select(); t.setSelectionRange(0, 999);
+        try { document.execCommand('copy'); hecho(); } catch (e) { b.textContent = enlace; }
+        document.body.removeChild(t);
+      }
+    };
+  }
+  var pasoSafari = '<li><b>Tiene que estar abierta en Safari.</b> Si has entrado desde WhatsApp: ' +
+    'toca <b>Copiar enlace</b>, abre <b>Safari</b>, pégalo arriba y entra</li>';
+  var btCopiar = '<button class="bt copiar">📋 Copiar enlace</button>';
+
   if (dentro) {
-    mostrar('<div class="t">Para instalar la app, ábrela en el navegador</div>' +
-      (ios ? '<ol><li>Toca <b>···</b> o el botón de compartir</li><li>Elige <b>Abrir en Safari</b></li></ol>'
-           : '<ol><li>Toca los tres puntos <b>⋮</b> de arriba a la derecha</li><li>Elige <b>Abrir en el navegador</b> (o en Chrome)</li></ol>'));
+    if (ios) {
+      mostrar('<div class="t">En iPhone hay que abrirla en Safari</div>' +
+        '<ol><li>Toca <b>Copiar enlace</b></li><li>Abre <b>Safari</b>, pégalo arriba y entra</li>' +
+        '<li>Allí te dirá cómo instalarla</li></ol>' + btCopiar);
+      botonCopiar();
+    } else {
+      mostrar('<div class="t">Para instalar la app, ábrela en el navegador</div>' +
+        '<ol><li>Toca los tres puntos <b>⋮</b> de arriba a la derecha</li><li>Elige <b>Abrir en el navegador</b> (o en Chrome)</li></ol>');
+    }
     return;
   }
   if (ios) {
+    // el navegador de WhatsApp en iPhone se parece a Safari y no siempre se distingue: se pide siempre el paso de Safari
     mostrar('<div class="t">Instala la app en tu iPhone</div>' +
-      '<ol><li>Toca el botón <b>Compartir</b> ' + compartir + ' de abajo (si no lo ves, toca antes <b>···</b>)</li>' +
+      '<ol>' + pasoSafari + '<li>Toca el botón <b>Compartir</b> ' + compartir + ' de abajo (si no lo ves, toca antes <b>···</b>)</li>' +
       '<li>Baja y toca <b>Añadir a pantalla de inicio</b></li><li>Toca <b>Añadir</b></li></ol>' +
-      '<div class="flecha">⬇</div>');
+      btCopiar + '<div class="flecha">⬇</div>');
+    botonCopiar();
     return;
   }
   // Android: el móvil avisa cuando se puede instalar (si ya está instalada, no avisa y no sale nada)
