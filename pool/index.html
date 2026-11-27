@@ -44,7 +44,10 @@
 <script>
   // la app de Apps Script va dentro; esta página solo pone el nombre, el icono y la instalación
   var f = document.getElementById('app');
-  f.src = APP.url;
+  // enlace personal ?k=…: la clave del móvil se guarda aquí (fuera del marco de Google, el iPhone sí la conserva) y se pasa a la app
+  var k = (location.search.match(/[?&]k=([a-z0-9]{8,40})/) || [])[1] || '';
+  try { if (k) localStorage.setItem('clave', k); else k = localStorage.getItem('clave') || ''; } catch (e) {}
+  f.src = APP.url + (k ? '?k=' + k : '');
   document.getElementById('abrirFuera').href = APP.url;
   var cargada = false;
   f.addEventListener('load', function () { cargada = true; document.getElementById('portada').className = 'fuera'; });
